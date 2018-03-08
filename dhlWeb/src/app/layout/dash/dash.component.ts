@@ -324,7 +324,7 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
 
-        this.dhlService.deleteCotizacion(idpartida, this.UsuarioID).subscribe((res: any) => {
+        this.dhlService.deleteCotizacion(idpartida, this.Usuario.idusuario).subscribe((res: any) => {
           console.log(res);
           if (res && res.OK>0) {
             //this.cotizaciones=[];
@@ -454,4 +454,12 @@ export class DashComponent implements OnInit {
       this.UnidadID = idUnidad;
     });
   }
+
+  calculateTotal():number{
+    let total=0;
+        this.cotizaciones.forEach((cotizacion,idx)=>{
+          total+=cotizacion.precio;
+        });
+    return total;
+  }    
 }
