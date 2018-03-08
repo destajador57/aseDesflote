@@ -1,0 +1,30 @@
+
+
+<ion-content padding>
+  <ion-row class="logo-row"  text-center>
+    <ion-col>
+      <img class="logo" src="assets/imgs/ase.png">
+    </ion-col>
+  </ion-row>
+  <div class="login-box">
+    <form (ngSubmit)="login()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="text" autocapitalize="off" placeholder="Usuario" name="email" [(ngModel)]="usuario.email" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="password" placeholder="Contraseña" name="password" [(ngModel)]="usuario.password" required></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Entrar</button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>

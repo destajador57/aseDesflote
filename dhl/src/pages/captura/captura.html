@@ -1,0 +1,77 @@
+<ion-header>
+        <ion-navbar >
+                <ion-title>{{titulo}}</ion-title>
+                <ion-buttons left>
+                  <button ion-button icon-only (click)="cerrar()">
+                    <ion-icon name="arrow-back"></ion-icon>
+                  </button>
+                </ion-buttons>
+                <!-- <ion-buttons end>
+                        <button ion-button icon-only menuToggle>
+                            <ion-icon name="menu" ></ion-icon>
+                        </button>
+                      </ion-buttons> -->
+              </ion-navbar>
+    <!-- <ion-navbar>
+
+            <ion-title>{{titulo}}</ion-title>
+            <ion-buttons icon-start>
+                    <button ion-button icon-only (click)="cerrar()">
+                      <ion-icon name="arrow-back"></ion-icon>
+                    </button>
+                  </ion-buttons>
+    </ion-navbar> -->
+  
+  </ion-header>
+
+<ion-content padding>
+
+    <ion-list>
+            <ion-card>
+                    <ion-card-header>
+                        Instrucciones:
+                    </ion-card-header>
+        
+                    <ion-list *ngIf="!instrucciones?.imagen">
+                        <ion-item text-wrap *ngFor="let instruccion of instrucciones?.valor">
+                                    {{instruccion}}
+                        </ion-item>
+                    </ion-list>
+                    <ion-list *ngIf="instrucciones?.imagen">
+                            <img [src]="instrucciones?.valor" class="slide-image" />
+                    </ion-list>
+                </ion-card>
+        <ion-card *ngIf="nombre && nombre.length > 0">
+            <ion-card-header>
+                Nombre del archivo:
+            </ion-card-header>
+
+            <ion-list>
+                <ion-item>
+                    {{nombre}}
+                </ion-item>
+                <ion-item *ngIf="tipo < 9">
+                    <img class="imagen-tomada" [src]="DomSanitizer.bypassSecurityTrustUrl(imageURI)" alt="nueva imagen" />
+                  </ion-item>
+            </ion-list>
+        </ion-card>
+        
+      <!-- <ion-item>
+        <video fullscreen="fullscreen" autoplay="true" (ended)="videoEnded()" controls>
+            <source [src]="DomSanitizer.bypassSecurityTrustUrl(imageURI)" type="video/mp4">
+          </video>
+      </ion-item> -->
+
+    </ion-list>
+    
+    <ion-fab bottom right #fab>
+        <button ion-fab (click)="tomar()">
+            <ion-icon name="camera" *ngIf="tipo == 1 || tipo == 2 || tipo == 3 || tipo == 4 || tipo == 5 || tipo == 6 || tipo == 7 || tipo == 8" item-start></ion-icon>
+            <ion-icon name="videocam" *ngIf="tipo == 9 || tipo == 10" item-start></ion-icon>
+        </button>
+        <button [disabled]="!imageURI" (click)="subir()" ion-fab>
+            Subir
+        </button>
+    </ion-fab>
+
+</ion-content>

@@ -1,0 +1,108 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Captura evidencia</ion-title>
+    <ion-buttons left>
+        <button ion-button icon-only (click)="regresar()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+    <ion-buttons end >
+      <button ion-button menuToggle style="display: inline-block !important;">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <!-- <button end ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button> -->
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      Lista de documentos
+    </ion-card-header>
+
+    <ion-list>
+
+      <button (click)="cargar(1)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Placa delantera
+        <ion-icon name="checkmark" *ngIf="cargado || doc.placaDelantera?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(2)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Placa trasera
+        <ion-icon name="checkmark" *ngIf="cargado || doc.placaTrasera?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(3)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Interior de cabina desde la puerta del conductor
+        <ion-icon name="checkmark" *ngIf="cargado || doc.interior?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(4)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Tablero con kilometraje
+        <ion-icon name="checkmark" *ngIf="cargado || doc.tablero?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(5)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Motor con cofre abierto
+        <ion-icon name="checkmark" *ngIf="cargado || doc.motor?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(6)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Tarjeta de circulación
+        <ion-icon name="checkmark" *ngIf="cargado || doc.tarjeta?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(7)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Verificación vehicular
+        <ion-icon name="checkmark" *ngIf="cargado || doc.verificacion?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(8)" ion-item>
+        <ion-icon name="camera" item-start></ion-icon>
+        Verificación de gases
+        <ion-icon name="checkmark" *ngIf="cargado || doc.gases?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(9)" ion-item>
+        <ion-icon name="videocam" item-start></ion-icon>
+        Escape con motor encendido
+        <ion-icon name="checkmark" *ngIf="cargado || doc.escape?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="cargar(10)" ion-item>
+        <ion-icon name="videocam" item-start></ion-icon>
+        Transmisión en funcionamiento
+        <ion-icon name="checkmark" *ngIf="cargado || doc.transmision?.length > 0" color="secondary" item-end></ion-icon>
+      </button>
+
+      <button (click)="finalizar()" [disabled]="!cargado && !terminado" [color]="cargado || terminado ? 'primary': 'default'" ion-item>
+        <ion-icon name="checkmark-circle" item-start></ion-icon>
+        Terminar
+      </button>
+    </ion-list>
+  </ion-card>
+  <ion-fab bottom left>
+    <button (click)="instrucciones()" color="danger" ion-fab>
+        <ion-icon name="help" item-start></ion-icon>
+    </button>
+</ion-fab>
+</ion-content>
+
+<!-- <ion-footer>
+  <button ion-button (click)="instrucciones()" type="button" block clear>
+    Instrucciones
+  </button>
+</ion-footer> -->

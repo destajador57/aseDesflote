@@ -1,0 +1,81 @@
+<ion-header>
+
+    <ion-navbar>
+      <ion-title>Buscar</ion-title>
+      <ion-buttons end>
+          <button ion-button icon-only menuToggle>
+              <ion-icon name="menu" ></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-navbar>
+  
+  </ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item no-lines>
+        <ion-input type="text" autocapitalize="off" placeholder="Buscar por VIN o placas" name="vin" [(ngModel)]="vin" required>
+          </ion-input>
+    </ion-item>
+    
+    <ion-fab bottom right>
+        <button [disabled]="!vin || !vin.length > 0" (click)="buscar()" ion-fab>
+            <ion-icon name="search" item-start></ion-icon>
+        </button>
+    </ion-fab>
+
+    <ion-fab bottom left>
+      <button (click)="instrucciones()" color="danger" ion-fab>
+          <ion-icon name="help" item-start></ion-icon>
+      </button>
+  </ion-fab>
+
+    <ion-card *ngIf="unidad?.UnidadId > 0">
+        <ion-card-header>
+          Informacion de la unidad:
+        </ion-card-header>
+      
+        <ion-list>
+          <button ion-item>
+            <ion-icon name="bookmark" item-start></ion-icon>
+            Marca: <b>{{unidad.marca}}</b>
+          </button>
+
+          <button ion-item>
+            <ion-icon name="pricetag" item-start></ion-icon>
+            Submarca: <b>{{unidad.submarca}}</b>
+          </button>
+      
+          <button ion-item>
+            <ion-icon name="car" item-start></ion-icon>
+            Modelo: <b>{{unidad.modelo}}</b>
+          </button>
+      
+          <button ion-item>
+            <ion-icon name="speedometer" item-start></ion-icon>
+            Placas: <b>{{unidad.placas}}</b>
+          </button>
+      
+          <button ion-item>
+            <ion-icon name="barcode" item-start></ion-icon>
+            VIN: <b>{{unidad.vin}}</b>
+          </button>
+
+          <button *ngIf="unidad?.DoctosExists == 0" (click)="cargar()" color="primary" ion-item>
+            <ion-icon name="images" item-start></ion-icon>
+            Cargar evidencia
+          </button>
+          <button *ngIf="unidad?.DoctosExists == 1" color="secondary" ion-item>
+            <ion-icon name="images" item-start></ion-icon>
+            Evidencia cargada
+          </button>
+        </ion-list>
+      </ion-card>
+  </ion-list>
+</ion-content>
+<!-- 
+<ion-footer>
+    <button ion-button (click)="instrucciones()" type="button" block clear>
+      Instrucciones
+    </button>
+  </ion-footer> -->
