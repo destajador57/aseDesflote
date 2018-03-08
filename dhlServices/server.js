@@ -441,32 +441,29 @@ app.get('/Get_All', function(req,res){
 });
 
 
-app.post('/InsertaCom',function(req, res){
+app.get('/InsertaCom',function(req, res){
     var dbConn = new sql.Connection(config); 
     dbConn.connect().then(function () {
         var request = new sql.Request(dbConn);
         request
         .input ('Comentario',req.query.Comentario)
         .input ('UsuarioId',req.query.UsuarioId)
-        .input('UnidadID',req.query.UnidadID)
+        .input('idUnidad', req.query.UnidadID) 
         .execute("[WEB_DHL_INS_COM]").then(function (recordSet) {
-            //var msj = JSON.stringify();
-            
-            dbConn.close();
-            res.contentType('application/json');
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            console.log(recordSet[0][0].ArchivoId);
-            res.send(recordSet[0][0].ArchivoId);
-        }).catch(function (err) {
-           dbConn.close();
-           regreso('false',err.message,res);
-        });
-    }).catch(function (err) {
-        dbConn.close();
-        regreso('false',err.message,res);
-    });
-    
+			var msj = JSON.stringify(recordSet[0]);
+			dbConn.close();
+			res.contentType('application/json');
+			res.header("Access-Control-Allow-Origin", "*");
+			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		 res.send({resp:msj});
+	   }).catch(function (err) {
+		  dbConn.close();
+		   regreso('0','Err1:'+err.message,res);
+	   });
+   }).catch(function (err) {
+		dbConn.close();
+		regreso('0','Err2:'+err.message,res);
+   });
 });
 
 ////GET COTIZACIONXUNIDAD
