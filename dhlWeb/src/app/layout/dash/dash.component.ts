@@ -83,7 +83,7 @@ export class DashComponent implements OnInit {
   idUnidad: number = 0;
   vin: number = 0;
   UnidadID: number = 0;
-  UsuarioID = JSON.parse(localStorage.getItem("user")).usuario;
+  UsuarioID: number = 0;
   comentar : string ="";
   partida : string ="";
   ofertar : number = 0;
@@ -108,6 +108,7 @@ export class DashComponent implements OnInit {
     private dhlService: DhlServiceService,
     private domSanitizer: DomSanitizer,
     private _http: HttpClient) {
+      this.UsuarioID = JSON.parse(localStorage.getItem("user")).idusuario;
     this.form = fb.group({
       // "SelectTipoPromocion": this.SelectTipoPromocion,
       // "SelectEmpresa": this.SelectEmpresa,
@@ -452,7 +453,6 @@ export class DashComponent implements OnInit {
       this.comentarios = res;
       this.temp_comentario = true;
       this.UnidadID = idUnidad;
-      // localStorage.getItem("user");
     });
   }
 
