@@ -282,13 +282,32 @@ function Weblog(req,res){
 		.input ('Usuario', req.query.Usuario)
 		.input ('Password',req.query.Password)
 		.execute("WEB_DHL_VALIDA_LOGIN").then(function(recordSet){
-			var msj = JSON.stringify(recordSet[0][0]);
-			dbConn.close();
+			var msj = recordSet[0][0];
+		
 			res.contentType('application/json');
 			res.header("Access-Control-Allow-Origin", "*");
 			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		//	console.log(msj);
+			if(msj){
+				// Busca permisos por columna
+				var request2 = new sql.Request(dbConn);
+				request2
+				.input ('App','2')
+				.input ('Usuario', req.query.Usuario)
+				.input ('Password',req.query.Password)
+				.execute("WEB_DHL_VALIDA_LOGIN_PER").then(function(recordSet){
+					msj.permisos = recordSet[0];
+					dbConn.close();
+					res.send(msj);
+				}).catch(function (err) {
+					dbConn.close();
+					regreso('false',err.message,res);
+				});
+			}else{
+				dbConn.close();
+				regreso('false',"No coinciden datos ",res);
+			}
 			
-			res.send(msj);
 			//res.send(msj);
         }).catch(function (err) {
            dbConn.close();
@@ -458,7 +477,7 @@ app.get('/BuscarCoti', function(req,res){
 		request
 		.input ('idUnidad',req.query.idUnidad)
 		.execute("[WEB_DHL_GET_COTIZACION]").then(function (recordSet) {
-			var msj = JSON.stringify(recordSet[0][0]);
+			var msj = JSON.stringify(recordSet[0]);
 			
 			dbConn.close();
 			res.contentType('application/json');
