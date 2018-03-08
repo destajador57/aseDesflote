@@ -274,7 +274,7 @@
         </div>
         <div class="modal-body">
             <!-- <form [formGroup]="form" (ngSubmit)="saveDash()"> -->
-            <div class="row div-space">
+            <div *ngIf="cotizacionC == 'w'" class="row div-space">
                 <div class="row">
                     <h6 class="text-muted">Agregar Partida</h6>
                     <table style="width: 100%;background-color: white;" border="0">
@@ -293,7 +293,7 @@
                 </div>
             </div>
             <div class="modal-footer" >
-                <button class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
+                <button *ngIf="cotizacionC == 'w'" class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
             </div>
             <div class="row div-space">
                 <div class="col">
