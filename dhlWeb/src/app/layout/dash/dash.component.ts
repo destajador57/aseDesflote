@@ -198,7 +198,6 @@ export class DashComponent implements OnInit {
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            this.modalReference.close();
             unidad.monto = res[0].Monto;
             unidad.estatusOferta = res[0].Estatus;
             
@@ -248,7 +247,6 @@ export class DashComponent implements OnInit {
             this.oferta = {};
             unidad.monto = res[0].Monto;
             unidad.estatusOferta = res[0].Estatus;
-            this.modalReference.close();
             swal(
               'Rechazada',
               'Oferta Rechazada con Exito.',
