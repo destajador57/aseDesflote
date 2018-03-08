@@ -50,7 +50,13 @@ GetCotizacionByUnidad(idUnidad) {
 
   InsertCotizacion(idUnidad, partida,cantidad,precio, UsuarioID) {
     const url = this.urlService + 'InsertCoti?idUnidad=' + idUnidad +'&Partida=' + partida +'&Precio=' + precio +'&Cantidad=' + cantidad +'&UsuarioId=' + UsuarioID ;
-    console.log(url);
+    //console.log(url);
+    return this.http.get(url);
+  }
+
+  deleteCotizacion(idpartida,UsuarioID) {
+    const url = this.urlService + 'deleteCoti?idPartida=' + idpartida ;
+    //console.log(url);
     return this.http.get(url);
   }
 

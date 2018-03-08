@@ -159,7 +159,7 @@ export class DashComponent implements OnInit {
 
     //const usuario = {Usuario: 'userweb', Password: 123};
     this.dhlService.GetUnidades().subscribe((res: Array<any>) => {
-      console.log(res);
+      //console.log(res);
       this.unidades = res;
       this.temp_var = true;
     });
@@ -209,7 +209,7 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
-          console.log(res);
+          //console.log(res);
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
             console.log("Agrego oferta");
@@ -380,9 +380,63 @@ export class DashComponent implements OnInit {
     });
   }
 
+  deleteCotizacion(idpartida,idUnidad){
+    swal({
+      title: '¿Desea Eliminar la Partida?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Actualizar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+    
+        this.dhlService.deleteCotizacion(idpartida, this.UsuarioID).subscribe((res: any) => {
+          console.log(res);
+          if (res && res.OK>0) {
+            //this.cotizaciones=[];
+            //Llena Tabla Partidas 
+            this.dhlService.GetCotizacionByUnidad(idUnidad).subscribe((res: Array<any>) => {
+              
+              this.cotizaciones = res;
+            });
+            this.partida = "";
+            this.precio = "";
+            this.cantidad = "";
+            //console.log("Agrego Partida");
+            
+            swal(
+              'Guardado',
+              'Partida Eliminada con Exito.',
+              'success'
+            );
+          } else {
+    
+            console.log('error en el login');
+            this.partida = "";
+            this.precio = "";
+            this.cantidad = "";
+          }
+        });
+    
+      } else if (result.dismiss === 'cancel') {
+        swal(
+          'Cancelado',
+          'No se Elimino La Partida.',
+          'error'
+        )
+      }
+    });
+    
+      }
+
   insertCotizacion(idUnidad, partida,cantidad,precio) {
     swal({
-      title: '¿Desea Ingresar la Partida?' + idUnidad + " " + partida + " " + this.UsuarioID,
+      title: '¿Desea Ingresar la Partida?' ,
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -397,7 +451,8 @@ export class DashComponent implements OnInit {
 
         this.dhlService.InsertCotizacion(idUnidad, partida,cantidad,precio, this.UsuarioID).subscribe((res: any) => {
           console.log(res);
-          if (res && res.ok > 0) {
+          if (res && res.length > 0 && res[0].UnidadId > 0) {
+            this.cotizaciones = [];
             
             //Llena Tabla Partidas 
             this.dhlService.GetCotizacionByUnidad(idUnidad).subscribe((res: Array<any>) => {
@@ -515,10 +570,18 @@ export class DashComponent implements OnInit {
     this.dhlService.GetCotizacionByUnidad(idUnidad).subscribe((res: Array<any>) => {
       this.cotizaciones = res;
       this.UnidadID = idUnidad;
-      console.log(idUnidad);
+      //console.log(idUnidad);
       console.log(this.cotizaciones);
     });
   }
+
+  calculateTotal():number{
+let total=0;
+    this.cotizaciones.forEach((cotizacion,idx)=>{
+      total+=cotizacion.precio;
+    });
+return total;
+}
 
     // this.getTablaPromociones();
 

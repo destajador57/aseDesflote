@@ -263,37 +263,38 @@
     <!-- Inicia el modal  Cotizaciones -->
     <ng-template #cotizacion let-c="close" let-d="dismiss">
         <div class="modal-header">
-            <h4 class="modal-title text-muted">Cotizaciones</h4>
+            <h4 class="modal-title text-muted">Cotización</h4>
         </div>
         <div class="modal-body">
             <!-- <form [formGroup]="form" (ngSubmit)="saveDash()"> -->
             <div class="row div-space">
-                <div class="col">
+                <div class="row">
                     <h6 class="text-muted">Agregar Partida</h6>
-                    <table style="width: 100%;" border="0">
+                    <table style="width: 100%;background-color: white;" border="0">
                         <tr>
                             <td><h6 class="text-muted">Partida</h6></td>
                     <td colspan="3"><input class="col form-control form-control-sm" name="partida" [(ngModel)]="partida"></td>
                 </tr>
-                <tr><td></td></tr>
-                <tr>
+                
+                <tr style="background-color: white;border: 0;">
                         <td><h6 class="text-muted">Cantidad</h6></td>
-                        <td><input class="col form-control form-control-sm" name="cantidad" [(ngModel)]="cantidad"></td>
+                        <td><input type="number" class="col form-control form-control-sm" name="cantidad" [(ngModel)]="cantidad"></td>
                     <td><h6 class="text-muted">Precio</h6></td>
-                    <td><input class="col form-control form-control-sm" name="precio" [(ngModel)]="precio"></td>
+                    <td><input type="number" class="col form-control form-control-sm" name="precio" [(ngModel)]="precio"></td>
                 </tr>
                 </table>
                 </div>
             </div>
-            <div class="modal-footer" style="margin: 20px">
-                <button class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)">Agregar</button>
+            <div class="modal-footer" >
+                <button class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
             </div>
             <div class="row div-space">
                 <div class="col">
                     <table style="width:100%;font-size:11px">
                         <thead class="blue-grey lighten-4">
-                            <tr>
+                            <tr class="text-center">
                                 <th>#</th>
+                                <th>Unidad (ID)</th>
                                 <th>Partida</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
@@ -302,19 +303,25 @@
                         </thead>
                         <tbody>
                             <tr class="text-center" *ngFor="let cotizacion of cotizaciones; let i = index;">
+                                <td>{{ cotizacion.idCotizacion }}</td>
                                 <td>{{ cotizacion.idUnidad }}</td>
                                 <td>{{ cotizacion.partida }}</td>
-                                <td>{{ cotizacion.cantidad }}</td>
-                                <td>{{ cotizacion.precio }}</td>
-                                <td> <button class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion()">X</button> </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="text-align">Total: </td>
-                                <td>Valor </td>
+                                <td>{{ cotizacion.cantidad | number }}</td>
+                                <td>{{ cotizacion.precio | currency }}</td>
+                                <td> <button class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion(cotizacion.idCotizacion,cotizacion.idUnidad)" title="Eliminar Partida">X</button> </td>
                             </tr>
                         </tbody>
+                        
                     </table>
                 </div>
+                     <div class="row div-space" style="text-align: right;width: 100%;">
+                        
+                        <div class="col">
+                            
+                            <div class="col-sm-10" style="border-top: 0px rgba(1, 9, 117, 0.993) double"><h6>Total:  {{calculateTotal() | currency}} </h6></div>
+                            
+                          </div>
+                        </div>
             </div>
 
             <div class="modal-footer" style="margin: 20px">
