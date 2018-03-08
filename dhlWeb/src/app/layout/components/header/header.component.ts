@@ -24,8 +24,7 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.userName = JSON.parse( localStorage.getItem("UserData") ).NombreCompleto;
-        this.userName = localStorage.getItem("user");
+        this.userName = JSON.parse(localStorage.getItem("user")).usuario;
     }
 
     isToggled(): boolean {

@@ -201,7 +201,7 @@ export class PromocionesComponent implements OnInit {
                 });
             };
             this.form.controls['imageInput'].setValue(file ? file : '');
-            this.form.controls['idUsuario'].setValue(JSON.parse(localStorage.getItem("UserData")).usu_id);
+            this.form.controls['idUsuario'].setValue(JSON.parse(localStorage.getItem("user")).idusuario);
         }   
     }
 
@@ -304,7 +304,7 @@ export class PromocionesComponent implements OnInit {
                     po_IdSucursal: this.selectedSucursal,
                     po_IdMarca: this.selectedMarca,
                     po_Descripcion: this.descripcion,
-                    po_IdUsuario: JSON.parse(localStorage.getItem("UserData")).usu_id,
+                    po_IdUsuario: JSON.parse(localStorage.getItem("user")).idusuario,
                     po_IdPromocion: promoid
                  })
                 .subscribe( serverResponse => {

@@ -83,7 +83,7 @@ export class DashComponent implements OnInit {
   idUnidad: number = 0;
   vin: number = 0;
   UnidadID: number = 0;
-  UsuarioID = localStorage.getItem("user");
+  UsuarioID = JSON.parse(localStorage.getItem("user")).usuario;
   comentar : string ="";
   partida : string ="";
   ofertar : number = 0;
@@ -108,7 +108,6 @@ export class DashComponent implements OnInit {
     private dhlService: DhlServiceService,
     private domSanitizer: DomSanitizer,
     private _http: HttpClient) {
-    console.log('constructor');
     this.form = fb.group({
       // "SelectTipoPromocion": this.SelectTipoPromocion,
       // "SelectEmpresa": this.SelectEmpresa,
@@ -129,8 +128,6 @@ export class DashComponent implements OnInit {
       // "promoIdUp": this.promoIdUp,
       // "typeImgUp": this.typeImgUp,
     });
-    console.log('fin constructor');
-
  
     this.unidades = [];
     this.comentarios = [];
@@ -154,12 +151,8 @@ export class DashComponent implements OnInit {
   }
 
   getTablaDash(): void {
-
-    console.log('dentro del metodo Consulta Unidades');
-
     //const usuario = {Usuario: 'userweb', Password: 123};
     this.dhlService.GetUnidades().subscribe((res: Array<any>) => {
-      console.log(res);
       this.unidades = res;
       this.temp_var = true;
     });
@@ -209,10 +202,8 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
-          console.log(res);
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            console.log("Agrego oferta");
             this.modalReference.close();
             oferta.unidad.monto = res[0].Monto;
             oferta.unidad.estatusOferta = res[0].Estatus;
@@ -223,8 +214,6 @@ export class DashComponent implements OnInit {
               'success'
             );
           } else {
-
-            console.log('error en el guardado de la oferta');
             this.oferta = {};
           }
         });
@@ -256,10 +245,8 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
-          console.log(res);
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            console.log("Agrego oferta");
             this.modalReference.close();
             oferta.unidad.monto = res[0].Monto;
             oferta.unidad.estatusOferta = res[0].Estatus;
@@ -270,8 +257,6 @@ export class DashComponent implements OnInit {
               'success'
             );
           } else {
-
-            console.log('error en el guardado de la oferta');
             this.oferta = {};
           }
         });
@@ -303,10 +288,8 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
-          console.log(res);
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            console.log("Agrego oferta");
             oferta.unidad.monto = res[0].Monto;
             oferta.unidad.estatusOferta = res[0].Estatus;
             this.modalReference.close();
@@ -316,8 +299,6 @@ export class DashComponent implements OnInit {
               'success'
             );
           } else {
-
-            console.log('error en el guardado de la oferta');
             this.oferta = {};
           }
         });
@@ -348,15 +329,12 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.InsertComentario(idUnidad, comentario, this.UsuarioID).subscribe((res: any) => {
-          console.log(res);
           if (res && res.ok > 0) {
-            
             //Llena Tabla Comentario 
             this.dhlService.GetComentariosByUnidad(idUnidad).subscribe((res: Array<any>) => {
               this.comentarios = res;
             });
             this.comentar = "";
-            console.log("Agrego Comentario");
             
             swal(
               'Guardado',
@@ -364,8 +342,6 @@ export class DashComponent implements OnInit {
               'success'
             );
           } else {
-
-            console.log('error en el login');
             this.comentar = "";
           }
         });
@@ -396,7 +372,6 @@ export class DashComponent implements OnInit {
       if (result.value) {
 
         this.dhlService.InsertCotizacion(idUnidad, partida,cantidad,precio, this.UsuarioID).subscribe((res: any) => {
-          console.log(res);
           if (res && res.ok > 0) {
             
             //Llena Tabla Partidas 
@@ -407,7 +382,6 @@ export class DashComponent implements OnInit {
             this.partida = "";
             this.precio = "";
             this.cantidad = "";
-            console.log("Agrego Partida");
             
             swal(
               'Guardado',
@@ -416,7 +390,6 @@ export class DashComponent implements OnInit {
             );
           } else {
 
-            console.log('error en el login');
             this.partida = "";
             this.precio = "";
             this.cantidad = "";
@@ -480,9 +453,6 @@ export class DashComponent implements OnInit {
       this.temp_comentario = true;
       this.UnidadID = idUnidad;
       // localStorage.getItem("user");
-
-      console.log("IDUnidad Modal", idUnidad);
-      console.log(this.comentarios);
     });
   }
 
@@ -492,8 +462,6 @@ export class DashComponent implements OnInit {
 
     this.dhlService.GetEvidenciasByUnidad(idUnidad).subscribe((res: Array<any>) => {
       this.evidencias = res;
-      console.log(idUnidad);
-      console.log(this.evidencias);
     });
   }
 
@@ -515,8 +483,6 @@ export class DashComponent implements OnInit {
     this.dhlService.GetCotizacionByUnidad(idUnidad).subscribe((res: Array<any>) => {
       this.cotizaciones = res;
       this.UnidadID = idUnidad;
-      console.log(idUnidad);
-      console.log(this.cotizaciones);
     });
   }
 

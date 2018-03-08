@@ -85,7 +85,7 @@ export class PerfilusuarioComponent implements OnInit {
   private _urlUpdPass     = "api/usuarios/updatepass";      
 
   ngOnInit() {
-    this.usu_id = JSON.parse( localStorage.getItem("UserData") ).usu_id;
+    this.usu_id = JSON.parse( localStorage.getItem("user") ).idusuario;
     this.getUsuarioById();
     this.getEmpresas();
     this.GetPuestos();

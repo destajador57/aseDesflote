@@ -12,10 +12,10 @@ export class SidebarComponent {
 
     changeIconEmp: number = 0;
     changeIconTip: number = 0;
-    userName: number;
+    userName: string;
 
     ngOnInit() {
-        this.userName = JSON.parse( localStorage.getItem("UserData") ).usu_rol;
+        this.userName = JSON.parse(localStorage.getItem("user")).usuario;
     }
 
     eventCalled() {
