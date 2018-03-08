@@ -32,7 +32,7 @@ export class DhlServiceService {
 
 
   InsertComentario(idUnidad, comentario, UsuarioID) {
-    const url = this.urlService + 'BuscaComen?idUnidad=' + idUnidad;
+    const url = this.urlService + `InsertaCom?UnidadID=${idUnidad}&UsuarioId=${UsuarioID}&Comentario=${comentario}`;
     return this.http.get(url);
   }
 

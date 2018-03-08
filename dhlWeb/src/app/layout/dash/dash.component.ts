@@ -42,22 +42,11 @@ import swal from "sweetalert2";
   styleUrls: ['./dash.component.scss']
 })
 export class DashComponent implements OnInit {
-
   // //ruta
   // public serverPath: any = "http://192.168.20.92:3420/promociones/";
 
   //Variables para el formulario de guardar una nueva promocion
   form: FormGroup;
-  // SelectTipoPromocion = new FormControl("", Validators.required);
-  // SelectEmpresa = new FormControl("", Validators.required);
-  // SelectSucursal = new FormControl("", Validators.required);
-  // SelectMarca = new FormControl("", Validators.required);
-  // TxtDescripcion = new FormControl("", Validators.required);
-  // imageInput = new FormControl("");
-  // idUsuario = new FormControl("");
-  // RealImg = new FormControl("");
-  // typeImg = new FormControl("");
-  // typeImgUp = new FormControl("");
   txt_idUnidad = new FormControl("", Validators.required);
 
   //Variables para el formualario de actualizar imagen
@@ -65,25 +54,10 @@ export class DashComponent implements OnInit {
 
   //Variables a utilizar en la clase
   errorMessage: any;
-
-  // //ModalImagenVariables
-  // ModalDesc: string = "";
-  // ModalImg: string = "";
-  // ModalIdPromo: number = 0;
-
-  // selectedEmpresa: number = 0;
-  // selectedTPromocion: number = 0;
-  // selectedMarca: number = 0;
-  // selectedSucursal: number = 0;
-  // descripcion: string = "";
-
-  // closeResult: string;
-  // idPromocion: number = 0;
-  // public data: object;
   idUnidad: number = 0;
   vin: number = 0;
   UnidadID: number = 0;
-  UsuarioID: number = 0;
+  Usuario: any;
   comentar : string ="";
   partida : string ="";
   ofertar : number = 0;
@@ -108,82 +82,33 @@ export class DashComponent implements OnInit {
     private dhlService: DhlServiceService,
     private domSanitizer: DomSanitizer,
     private _http: HttpClient) {
-      this.UsuarioID = JSON.parse(localStorage.getItem("user")).idusuario;
-    this.form = fb.group({
-      // "SelectTipoPromocion": this.SelectTipoPromocion,
-      // "SelectEmpresa": this.SelectEmpresa,
-      // "SelectSucursal": this.SelectSucursal,
-      // "SelectMarca": this.SelectMarca,
-      // "TxtDescripcion": this.TxtDescripcion,
-      // "imageInput": this.imageInput,
-      // "idUsuario": this.idUsuario,
-      // "RealImg": this.RealImg,
-      // "typeImg": this.typeImg,
-      "txt_idUnidad": this.txt_idUnidad,
+      this.Usuario = JSON.parse(localStorage.getItem("user"));
+      this.form = fb.group({
+        "txt_idUnidad": this.txt_idUnidad,
+      });
 
-    });
-
-    this.formUpdate = fb.group({
-      // "RealImgUpdate": this.RealImgUpdate,
-      // "imageInputUpdate": this.imageInputUpdate,
-      // "promoIdUp": this.promoIdUp,
-      // "typeImgUp": this.typeImgUp,
-    });
- 
-    this.unidades = [];
-    this.comentarios = [];
-    this.cotizaciones = [];
-    this.evidencias = [];
+      this.formUpdate = fb.group({
+      });
+  
+      this.unidades = [];
+      this.comentarios = [];
+      this.cotizaciones = [];
+      this.evidencias = [];
   }
 
   resultadoDash: IAutoTb[] = [];
   resultadoComentariosById: IComentarioById[] = [];
   resultadoCotizacionesById: ICotizacionById[] = [];
-  // serverResponse:             IServerResponse[] = [];
-  // resultadoEmpresas:          IEmpresas[] = [];
-  // resultadoTPromocion:        ITipoPromocion[] = [];
-  // resultadoMarca:             IMarca[] = [];
-  // resultadoSucursal:          ISucursal[] = [];
 
   ngOnInit() {
     this.getTablaDash();
-    // this.getEmpresas();
-    // this.getTipoPromocion();
   }
 
   getTablaDash(): void {
-    //const usuario = {Usuario: 'userweb', Password: 123};
     this.dhlService.GetUnidades().subscribe((res: Array<any>) => {
       this.unidades = res;
       this.temp_var = true;
     });
-    // this.dhlService.GetUnidades()
-    //   .subscribe((resultadosUnidades: any) => {
-    //   console.log("",localStorage.getItem("isLoggedin"));
-    //   // if (res && res.ok > 0) {
-    //   //   localStorage.setItem('isLoggedin', 'true');
-    //   //   this.router.navigate(['/dash']);
-    //   //   //this.router.navigateByUrl('dash');
-    //   //   console.log("aqui")
-    //   // } else {
-    //     // this.error = true;
-    //      console.log("error")
-    //   // }
-    // });
-
-    // this._Dashservice.getDashColumn()
-    //   .subscribe(resultadoDash => {
-    //     // var pathServer = this.serverPath;
-    //     this.temp_var = true;
-    //     this.resultadoDash = resultadoDash;
-    //     // console.log("pathserver", pathServer);
-    //     // this.resultadoPromociones.forEach(function (item, key) {
-    //     //   item.pathImagen = pathServer + item.po_RutaImagen;
-    //     //item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
-    //     // });
-    //     console.log("Resultado", this.resultadoDash);
-    //   },
-    //     error => this.errorMessage = <any>error);
   }
 
   addOferta(oferta){
@@ -316,7 +241,7 @@ export class DashComponent implements OnInit {
 
   insertComentario(idUnidad, comentario) {
     swal({
-      title: '¿Desea Ingresar el Comentario?' + idUnidad + " " + comentario + " " + this.UsuarioID,
+      title: '¿Desea Ingresar el Comentario?',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -328,8 +253,7 @@ export class DashComponent implements OnInit {
       buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
-
-        this.dhlService.InsertComentario(idUnidad, comentario, this.UsuarioID).subscribe((res: any) => {
+        this.dhlService.InsertComentario(idUnidad, comentario, this.Usuario.idusuario).subscribe((res: any) => {
           if (res && res.ok > 0) {
             //Llena Tabla Comentario 
             this.dhlService.GetComentariosByUnidad(idUnidad).subscribe((res: Array<any>) => {
@@ -359,7 +283,7 @@ export class DashComponent implements OnInit {
 
   insertCotizacion(idUnidad, partida,cantidad,precio) {
     swal({
-      title: '¿Desea Ingresar la Partida?' + idUnidad + " " + partida + " " + this.UsuarioID,
+      title: '¿Desea Ingresar la Partida?',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -372,7 +296,7 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
 
-        this.dhlService.InsertCotizacion(idUnidad, partida,cantidad,precio, this.UsuarioID).subscribe((res: any) => {
+        this.dhlService.InsertCotizacion(idUnidad, partida,cantidad,precio, this.Usuario.idusuario).subscribe((res: any) => {
           if (res && res.ok > 0) {
             
             //Llena Tabla Partidas 
@@ -390,7 +314,6 @@ export class DashComponent implements OnInit {
               'success'
             );
           } else {
-
             this.partida = "";
             this.precio = "";
             this.cantidad = "";
@@ -406,41 +329,6 @@ export class DashComponent implements OnInit {
       }
     });
   }
-
-  // saveDash() {
-  //   swal({
-  //     title: '¿Guardar El Comentario?',
-  //     type: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Guardar',
-  //     cancelButtonText: 'Cancelar',
-  //     confirmButtonClass: 'btn btn-success',
-  //     cancelButtonClass: 'btn btn-danger',
-  //     buttonsStyling: false,
-  //   }).then((result) => {
-  //     if (result.value) {
-  //       this._Dashservice.saveComentarios(this.form)
-  //         .subscribe(serverResponse => {
-  //           swal(
-  //             'Guardado',
-  //             'Se guardo la promción con éxito.',
-  //             'success'
-  //           );
-  //           // this.serverResponse = serverResponse;
-  //           // this.getTablaPromociones();
-  //         },
-  //           error => this.errorMessage = <any>error);
-  //     } else if (result.dismiss === 'cancel') {
-  //       swal(
-  //         'Canelado',
-  //         'No se guardo la promoción',
-  //         'error'
-  //       );
-  //     }
-  //   });
-  // }
 
   //================================================================= M O D A L E S =================================================//
 
@@ -469,7 +357,7 @@ export class DashComponent implements OnInit {
     this.modalReference = this.modalService.open(content, { size: 'lg' });
     this.oferta = {
       idUnidad: unidad.id,
-      idUsuario: this.UsuarioID,
+      idUsuario: this.Usuario.idusuario,
       monto: unidad.monto,
       estatus: unidad.estatusOferta,
       isNew: unidad.monto == null || unidad.monto == 0,
@@ -485,32 +373,4 @@ export class DashComponent implements OnInit {
       this.UnidadID = idUnidad;
     });
   }
-
-    // this.getTablaPromociones();
-
-
-  //// Llena Grid de Comentarios By ID
-  //   this._Dashservice.GetPromocion_ById({ idUnidad: idUnidad })
-
-  //     .subscribe(resultadoComentariosById => {
-  //       this.resultadoComentariosById = resultadoComentariosById;
-  //       this.idUnidad = idUnidad;
-  //       this.vin = vin;
-  //       // this.onChangeEmpresa( this.resultadoPromocionesById[0].po_idEmpresa );
-  //       // this.selectedTPromocion     = this.resultadoPromocionesById[0].po_IdTipoPromocion;
-  //       // this.selectedEmpresa        = this.resultadoPromocionesById[0].po_idEmpresa;
-  //       // this.selectedMarca          = this.resultadoPromocionesById[0].po_IdMarca;
-  //       // this.selectedSucursal       = this.resultadoPromocionesById[0].po_IdSucursal;
-  //       // this.descripcion            = this.resultadoPromocionesById[0].po_Descripcion;
-  //       // this.ModalImg               = img;
-  //       // this.idPromocion            = this.resultadoPromocionesById[0].po_IdPromocion;
-  //       // console.log(this.idUnidad);
-  //       // console.log(this.vin);
-  //       console.log("idUnidad",idUnidad);
-  //       console.log("Vin",vin);
-  //       this.temp_var = true;
-  //     },
-  //       error => this.errorMessage = <any>error);
-  // }
-
 }
