@@ -541,6 +541,36 @@ app.get('/deleteCoti',function(req, res){
 		 regreso('0','Err2:'+err.message,res);
 	});
  });
+
+ app.get('/GuardaOferta',function(req, res){
+	var dbConn = new sql.Connection(config);
+	dbConn.connect().then(function () {
+		var request = new sql.Request(dbConn);
+		request
+		.input ('idUsuario',req.query.idUsuario)
+		.input ('idUnidad',req.query.idUnidad)
+		 .input('monto',req.query.monto)
+		 .input('estatus',req.query.estatus)
+		.execute("WEB_DHL_GUARDA_OFERTA").then(function (recordSet) {
+			 var msj = JSON.stringify(recordSet[0]);
+			 dbConn.close();
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		  res.send(msj);
+		}).catch(function (err) {
+		   dbConn.close();
+			regreso('0','Err1:'+err.message,res);
+		});
+	}).catch(function (err) {
+		 dbConn.close();
+		 regreso('0','Err2:'+err.message,res);
+	});
+ });
+
   
 // escuchar
 app.listen(4850);
