@@ -70,6 +70,10 @@ export class DashComponent implements OnInit {
   evidencias: Array<any>;
   oferta: any;
   modalReference: any;
+  accionC:string;
+  cotizacionC:string;
+  trasladoC:string;
+  ofertaC:string;
 
   public temp_var: Object = false;
   temp_comentario = false;
@@ -83,6 +87,11 @@ export class DashComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private _http: HttpClient) {
       this.Usuario = JSON.parse(localStorage.getItem("user"));
+      this.accionC = this.validateColumn('Accion');
+      this.cotizacionC = this.validateColumn('Cotizacion');
+      this.trasladoC = this.validateColumn('Traslado');
+      this.ofertaC = this.validateColumn('Oferta');
+      console.log(this.Usuario);
       this.form = fb.group({
         "txt_idUnidad": this.txt_idUnidad,
       });
@@ -109,6 +118,17 @@ export class DashComponent implements OnInit {
       this.unidades = res;
       this.temp_var = true;
     });
+  }
+
+  validateColumn(colName:string): string{
+    // Posibles returns r=read | w=write | v=validate | d=deny
+    var columnsPermissions = this.Usuario.permisos;
+    var columnPermission = columnsPermissions.filter(column => column.columna == colName);
+    if(columnPermission.length > 0){
+      return columnPermission[0].permiso;
+    }
+
+    return "d";
   }
 
   addOferta(oferta){
@@ -154,8 +174,13 @@ export class DashComponent implements OnInit {
     });
   }
 
-  approveOferta(oferta){
-    oferta.estatus = "Aceptada";
+  approveOferta(unidad){
+    var oferta = {
+      idUnidad: unidad.id,
+      idUsuario: this.Usuario.idusuario,
+      monto: unidad.monto,
+      estatus: "Aceptada"
+    };
     swal({
       title: '¿Desea aprobar la oferta?',
       type: 'warning',
@@ -174,8 +199,8 @@ export class DashComponent implements OnInit {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
             this.modalReference.close();
-            oferta.unidad.monto = res[0].Monto;
-            oferta.unidad.estatusOferta = res[0].Estatus;
+            unidad.monto = res[0].Monto;
+            unidad.estatusOferta = res[0].Estatus;
             
             swal(
               'Aprobada',
@@ -197,8 +222,13 @@ export class DashComponent implements OnInit {
     });
   }
 
-  denyOferta(oferta){
-    oferta.estatus = "Rechazada";
+  denyOferta(unidad){
+    var oferta = {
+      idUnidad: unidad.id,
+      idUsuario: this.Usuario.idusuario,
+      monto: unidad.monto,
+      estatus: "Rechazada"
+    };
     swal({
       title: '¿Desea rechazar la oferta?',
       type: 'warning',
@@ -216,8 +246,8 @@ export class DashComponent implements OnInit {
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            oferta.unidad.monto = res[0].Monto;
-            oferta.unidad.estatusOferta = res[0].Estatus;
+            unidad.monto = res[0].Monto;
+            unidad.estatusOferta = res[0].Estatus;
             this.modalReference.close();
             swal(
               'Rechazada',
@@ -254,7 +284,7 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.dhlService.InsertComentario(idUnidad, comentario, this.Usuario.idusuario).subscribe((res: any) => {
-          if (res && res.ok > 0) {
+          if (res && res.length > 0 && res[0].ok > 0) {
             //Llena Tabla Comentario 
             this.dhlService.GetComentariosByUnidad(idUnidad).subscribe((res: Array<any>) => {
               this.comentarios = res;
@@ -360,7 +390,6 @@ export class DashComponent implements OnInit {
       idUsuario: this.Usuario.idusuario,
       monto: unidad.monto,
       estatus: unidad.estatusOferta,
-      isNew: unidad.monto == null || unidad.monto == 0,
       unidad: unidad
     };
   }
