@@ -282,7 +282,8 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.dhlService.InsertComentario(idUnidad, comentario, this.Usuario.idusuario).subscribe((res: any) => {
-          if (res && res.length > 0 && res[0].ok > 0) {
+          var resp = res && res.resp ? JSON.parse(res.resp) : [];
+          if (resp.length > 0 && resp[0].ok > 0) {
             //Llena Tabla Comentario
             this.dhlService.GetComentariosByUnidad(idUnidad).subscribe((res: Array<any>) => {
               this.comentarios = res;
