@@ -34,12 +34,15 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import swal from "sweetalert2";
+import { CurrencyPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-dash',
   templateUrl: './dash.component.html',
-  styleUrls: ['./dash.component.scss']
+  styleUrls: ['./dash.component.scss'],
+  providers: [CurrencyPipe]
+
 })
 export class DashComponent implements OnInit {
   // //ruta
@@ -57,13 +60,13 @@ export class DashComponent implements OnInit {
   idUnidad: number = 0;
   vin: number = 0;
   UnidadID: number = 0;
+  Unidad: any;
   Usuario: any;
   comentar : string ="";
   partida : string ="";
   ofertar : number = 0;
   precio : string ="";
   cantidad : string ="";
-
   unidades: Array<any>;
   comentarios: Array<any>;
   cotizaciones: Array<any>;
@@ -85,7 +88,8 @@ export class DashComponent implements OnInit {
     public fb: FormBuilder,
     private dhlService: DhlServiceService,
     private domSanitizer: DomSanitizer,
-    private _http: HttpClient) {
+    private _http: HttpClient,
+    private cp: CurrencyPipe) {
       this.Usuario = JSON.parse(localStorage.getItem("user"));
       this.accionC = this.validateColumn('Accion');
       this.cotizacionC = this.validateColumn('Cotizacion');
@@ -150,7 +154,11 @@ export class DashComponent implements OnInit {
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            this.modalReference.close();
+            if(this.modalReference){
+              this.modalReference.close();
+            }
+
+            this.modalReference = null;
             oferta.unidad.monto = res[0].Monto;
             oferta.unidad.estatusOferta = res[0].Estatus;
             oferta.unidad.NombreStatus = "Ofertada"
@@ -310,6 +318,50 @@ export class DashComponent implements OnInit {
     });
   }
 
+  insertImporteTraslado(unidad, importe){
+    swal({
+      title: '¿Desea guardar el monto?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+        this.dhlService.InsertImporte(unidad.id, importe, unidad.responsable, this.Usuario.idusuario).subscribe((res: any) => {
+          if (res && res.length > 0 && res[0].ok > 0) {
+            if(this.modalReference){
+              this.modalReference.close(true);
+            }
+            this.modalReference = null;
+            unidad.importeTraslado = importe;
+            unidad.NombreStatus = 'Entregada BANORTE';
+            swal(
+              'Guardado',
+              'Importe Guardado con Exito.',
+              'success'
+            );
+          } else {
+            this.oferta = {};
+          }
+        });
+
+      } else if (result.dismiss === 'cancel') {
+        if(unidad.responsable == 'DHL')
+          unidad.responsable = null;
+        swal(
+          'Cancelado',
+          'No se guardó el importe.',
+          'error'
+        )
+      }
+    });
+  }
+
   deleteCotizacion(idpartida,idUnidad){
     swal({
       title: '¿Desea Eliminar la Partida?',
@@ -337,7 +389,6 @@ export class DashComponent implements OnInit {
             this.partida = "";
             this.precio = "";
             this.cantidad = "";
-            //console.log("Agrego Partida");
 
             swal(
               'Guardado',
@@ -427,6 +478,17 @@ export class DashComponent implements OnInit {
     });
   }
 
+  openImporte(content, unidad){
+    this.Unidad = unidad;
+    this.modalReference = this.modalService.open(content, { size: "lg" });
+    this.modalReference.result.then((result)=>{
+      if(result != true)
+      {
+          unidad.responsable = null;
+          unidad.importeTraslado = null;
+      }
+    });
+  }
 
   openEvidencias(evidencia, idUnidad) {
     this.modalService.open(evidencia, { size: 'lg' });
@@ -462,5 +524,9 @@ export class DashComponent implements OnInit {
           total+=cotizacion.precio;
         });
     return total;
-  }    
+  }
+
+  displayTraslado(importe){
+    return importe != null && importe > 0 ? `(${this.cp.transform(importe)})` : ''
+  }
 }

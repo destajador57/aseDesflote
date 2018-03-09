@@ -56,11 +56,11 @@
                         </td>
                         <td *ngIf="accionC != 'd'">
                             <div style="width:160px">
-                                <select title="Accion" class="form-control form-control-sm" [disabled]="accionC == 'r'">
+                                <select title="Accion" class="form-control form-control-sm" [disabled]="accionC == 'r'" >
                                     <option value="0">Seleccione Accion</option>
                                     <option value="1">Enviar a Taller</option>
-                                    <option value="1">Trasladar BANORTE</option>
-                                    <option value="2">Oferta de Compra</option>
+                                    <option value="2">Trasladar BANORTE</option>
+                                    <option value="3">Oferta de Compra</option>
                                 </select>
                             </div>
                         </td>
@@ -82,16 +82,19 @@
                         <td *ngIf="trasladoC != 'd'">
                             <div style="width:100px;">
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r'" class="form-check-input" type="radio" name="exampleRadios" id="Chk_DHL" value="DHL" checked>
-                                    <label class="form-check-label" for="exampleRadios1">
+                                    <input [disabled]="trasladoC == 'r'" id="trasladoDHL{{unidad.id}}" class="form-check-input" type="radio" 
+                                        (change)="insertImporteTraslado(unidad, 0)" name="traslados{{unidad.id}}"
+                                        value="DHL" [(ngModel)]="unidad.responsable" >
+                                    <label class="form-check-label" for="trasladoDHL{{unidad.id}}">
                                         DHL
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r'" class="form-check-input" type="radio" (change)="open(contentI, unidad.id,unidad.vin)" name="exampleRadios" id="Chk_TParts"
-                                        value="TotalParts">
-                                    <label class="form-check-label" for="exampleRadios2">
-                                        Total Parts
+                                    <input [disabled]="trasladoC == 'r'" id="trasladoTP{{unidad.id}}" class="form-check-input" type="radio" 
+                                        (change)="openImporte(contentI, unidad)" name="traslados{{unidad.id}}"
+                                        value="TotalParts" [(ngModel)]="unidad.responsable">
+                                    <label class="form-check-label" for="trasladoTP{{unidad.id}}">
+                                        Total Parts {{ displayTraslado(unidad.importeTraslado) }}
                                     </label>
                                 </div>
                             </div>
@@ -117,16 +120,6 @@
                             </div>
                         </td>
                         <td>
-                            <!--<div style="width:180px">
-                                <select title="Estatus" class="form-control form-control-sm">
-                                    <option value="0">Sin Evidencia</option>
-                                    <option value="1">Evidencia Capturada</option>
-                                    <option value="2">En Reparación</option>
-                                    <option value="3">Ofertada</option>
-                                    <option value="4">Comprada</option>
-                                    <option value="5">Entregada BANORTE</option>
-                                </select>
-                            </div>-->
                             {{unidad.NombreStatus}}
                         </td>
                     </tr>
@@ -191,12 +184,11 @@
             <div class="row div-space">
                 <div class="col">
                     <h6 class="text-muted">Agregar Monto Importe:</h6>
-                    <textarea class="col form-control form-control-sm" rows="1" cols="20" name="importe" [(ngModel)]="importe">
-                        </textarea>
+                    <input type="Text" class="col form-control form-control-sm" name="importe" [(ngModel)]="Unidad.importeTraslado">
                 </div>
             </div>
             <div class="modal-footer" style="margin: 20px">
-                <button class="btn btn-outline-success" type="submit" (click)="insertComentario(UnidadID, comentar)">Guardar</button>
+                <button class="btn btn-outline-success" type="submit" (click)="insertImporteTraslado(Unidad, Unidad.importeTraslado)">Guardar</button>
                 <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Cerrar</button>
             </div>
         </div>
