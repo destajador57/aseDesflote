@@ -65,34 +65,48 @@
                             </div>
                         </td>
                         <td *ngIf="cotizacionC != 'd'">
-                            <div style="width:120px;">
-                                <button type="button" title="Editar Cotizacion" [disabled]="unidad.accion != 1 && cotizacionC == 'w'" class="btn btn-info btn-circle" (click)="openCot(cotizacion,unidad.id);">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </button>
+                            <div style="width:130px;">
+                                <h3>
+                                    <button *ngIf="unidad.TieneCot == 'SI' || cotizacionC == 'w'" title="Ver/editar Cotizacion" [disabled]="unidad.accion != 1 && cotizacionC == 'w'"
+                                        type="button" title="{{retornaLeyCot(cotizacionC)}}" class="btn btn-info btn-circle"
+                                        (click)="openCot(cotizacion,unidad.id);">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </button>
+                                    <button *ngIf="unidad.TieneCot == 'NO' && cotizacionC != 'w'" type="button" title="Sin Cotización" class="btn btn-outline-danger btn-circle">
+                                        <i *ngIf="unidad.TieneCot == 'NO'" title="Sin Cotización" class="fa fa-pencil text-muted" aria-hidden="true"></i>
+                                    </button>
 
-                                <button *ngIf="cotizacionC == 'v'" type="button" title="Aprobar Cotizacion" class="btn btn-success btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
-                                    <i class="fa fa-check" aria-hidden="true"></i>
-                                </button>
+                                    <button *ngIf="cotizacionC == 'v' && unidad.Aprobada == 0" type="button" [disabled]="unidad.TieneCot=='NO'" title="Aprobar Cotizacion"
+                                        class="btn btn-success btn-circle" (click)="AprobCoti(unidad.id,1);">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </button>
 
-                                <button *ngIf="cotizacionC == 'v'" type="button" title="Anular Cotizacion" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
-                                    <i class="fa fa-ban" aria-hidden="true"></i>
-                                </button>
+                                    <button *ngIf="cotizacionC == 'v' && unidad.Aprobada == 0" type="button" [disabled]="unidad.TieneCot=='NO'" title="Anular Cotizacion"
+                                        class="btn btn-danger btn-circle" (click)="AprobCoti(unidad.id,2);">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                    </button>
+
+                                    <i *ngIf="unidad.Aprobada == 1" title="Cotización Aprobada" class="fa fa-check text-success" aria-hidden="true"></i>
+                                    <i *ngIf="unidad.Aprobada == 2" title="Cotización Rechazada" class="fa fa-ban text-danger" aria-hidden="true"></i>
+
+                                </h3>
                             </div>
+
                         </td>
                         <td *ngIf="trasladoC != 'd'">
                             <div style="width:100px;">
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoDHL{{unidad.id}}" class="form-check-input" type="radio" 
-                                        (change)="insertImporteTraslado(unidad, 0)" name="traslados{{unidad.id}}"
-                                        value="DHL" [(ngModel)]="unidad.responsable" >
+                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoDHL{{unidad.id}}" class="form-check-input"
+                                        type="radio" (change)="insertImporteTraslado(unidad, 0)" name="traslados{{unidad.id}}"
+                                        value="DHL" [(ngModel)]="unidad.responsable">
                                     <label class="form-check-label" for="trasladoDHL{{unidad.id}}">
                                         DHL
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoTP{{unidad.id}}" class="form-check-input" type="radio" 
-                                        (change)="openImporte(contentI, unidad)" name="traslados{{unidad.id}}"
-                                        value="TotalParts" [(ngModel)]="unidad.responsable">
+                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoTP{{unidad.id}}" class="form-check-input"
+                                        type="radio" (change)="openImporte(contentI, unidad)" name="traslados{{unidad.id}}" value="TotalParts"
+                                        [(ngModel)]="unidad.responsable">
                                     <label class="form-check-label" for="trasladoTP{{unidad.id}}">
                                         Total Parts {{ displayTraslado(unidad.importeTraslado) }}
                                     </label>
@@ -106,17 +120,19 @@
                                     <i *ngIf="unidad.estatusOferta == 'Aceptada'" title="Oferta Aceptada" class="fa fa-check text-success" aria-hidden="true"></i>
                                     <i *ngIf="unidad.estatusOferta == 'Rechazada'" title="Oferta Rechazada" class="fa fa-ban text-danger" aria-hidden="true"></i>
                                 </h5>
-                                <button *ngIf="ofertaC == 'w' && (unidad.estatusOferta == null || unidad.estatusOferta == '')" style="margin-left: 10px" 
-                                    type="button" title="Agregar o modificar Oferta" class="btn btn-info btn-circle col-xs-6" (click)="openOfertas(ofertasM, unidad);"
-                                    [disabled]="unidad.accion != 3 && ofertaC == 'w'">
+                                <button *ngIf="ofertaC == 'w' && (unidad.estatusOferta == null || unidad.estatusOferta == '')" style="margin-left: 10px"
+                                    type="button" title="Agregar o modificar Oferta" class="btn btn-info btn-circle col-xs-6"
+                                    (click)="openOfertas(ofertasM, unidad);" [disabled]="unidad.accion != 3 && ofertaC == 'w'">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
-                                <button *ngIf="ofertaC == 'v' && unidad.monto != null && unidad.monto > 0 && (unidad.estatusOferta == null || unidad.estatusOferta == '')" 
-                                    style="margin-left: 10px" type="button" title="Aceptar Oferta" class="btn btn-success btn-circle col-xs-6" (click)="approveOferta(unidad);">
+                                <button *ngIf="ofertaC == 'v' && unidad.monto != null && unidad.monto > 0 && (unidad.estatusOferta == null || unidad.estatusOferta == '')"
+                                    style="margin-left: 10px" type="button" title="Aceptar Oferta" class="btn btn-success btn-circle col-xs-6"
+                                    (click)="approveOferta(unidad);">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </button>
-                                <button *ngIf="ofertaC == 'v' && unidad.monto != null && unidad.monto > 0 && (unidad.estatusOferta == null || unidad.estatusOferta == '')" 
-                                    style="margin-left: 10px" type="button" title="Rechazar Oferta" class="btn btn-danger btn-circle col-xs-6" (click)="denyOferta(unidad);">
+                                <button *ngIf="ofertaC == 'v' && unidad.monto != null && unidad.monto > 0 && (unidad.estatusOferta == null || unidad.estatusOferta == '')"
+                                    style="margin-left: 10px" type="button" title="Rechazar Oferta" class="btn btn-danger btn-circle col-xs-6"
+                                    (click)="denyOferta(unidad);">
                                     <i class="fa fa-ban" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -211,7 +227,7 @@
             <div class="row div-space">
                 <div class="col">
                     <div *ngIf="oferta.estatus == null">
-                        
+
                     </div>
                 </div>
             </div>
@@ -256,7 +272,7 @@
                 <div class="modal-footer" style="margin: 20px">
                     <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Cerrar</button>
                 </div>
-               
+
             </div>
         </div>
     </ng-template>
@@ -268,26 +284,40 @@
         </div>
         <div class="modal-body">
             <!-- <form [formGroup]="form" (ngSubmit)="saveDash()"> -->
-            <div *ngIf="cotizacionC == 'w'" class="row div-space">
+            <div *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'" class="row div-space">
                 <div class="row">
                     <h6 class="text-muted">Agregar Partida</h6>
                     <table style="width: 100%;background-color: white;" border="0">
                         <tr>
-                            <td><h6 class="text-muted">Partida</h6></td>
-                    <td colspan="3"><input class="col form-control form-control-sm" name="partida" [(ngModel)]="partida"></td>
-                </tr>
-                
-                <tr style="background-color: white;border: 0;">
-                        <td><h6 class="text-muted">Cantidad</h6></td>
-                        <td><input type="number" class="col form-control form-control-sm" name="cantidad" [(ngModel)]="cantidad"></td>
-                    <td><h6 class="text-muted">Precio</h6></td>
-                    <td><input type="number" class="col form-control form-control-sm" name="precio" [(ngModel)]="precio"></td>
-                </tr>
-                </table>
+                            <td>
+                                <h6 class="text-muted">Partida</h6>
+                            </td>
+                            <td colspan="3">
+                                <input class="col form-control form-control-sm" name="partida" [(ngModel)]="partida">
+                            </td>
+                        </tr>
+
+                        <tr style="background-color: white;border: 0;">
+                            <td>
+                                <h6 class="text-muted">Cantidad</h6>
+                            </td>
+                            <td>
+                                <input type="number" class="col form-control form-control-sm" name="cantidad" [(ngModel)]="cantidad">
+                            </td>
+                            <td>
+                                <h6 class="text-muted">Precio</h6>
+                            </td>
+                            <td>
+                                <input type="number" class="col form-control form-control-sm" name="precio" [(ngModel)]="precio">
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-            <div class="modal-footer" >
-                <button *ngIf="cotizacionC == 'w'" class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
+            <div class="modal-footer">
+                <h6>{{retornaLey()}}</h6>
+                <button *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'" class="btn btn-outline-success"
+                    type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
             </div>
             <div class="row div-space">
                 <div class="col">
@@ -309,20 +339,31 @@
                                 <td>{{ cotizacion.partida }}</td>
                                 <td>{{ cotizacion.cantidad | number }}</td>
                                 <td>{{ cotizacion.precio | currency }}</td>
-                                <td> <button class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion(cotizacion.idCotizacion,cotizacion.idUnidad)" title="Eliminar Partida">X</button> </td>
+                                <td>
+                                    <button *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'"
+                                        class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion(cotizacion.idCotizacion,cotizacion.idUnidad)"
+                                        title="Eliminar Partida">X</button>
+                                </td>
                             </tr>
                         </tbody>
-                        
+
                     </table>
                 </div>
-                     <div class="row div-space" style="text-align: right;width: 100%;">
-                        
-                        <div class="col">
-                            
-                            <div class="col-sm-10" style="border-top: 0px rgba(1, 9, 117, 0.993) double"><h6>Total:  {{calculateTotal() | currency}} </h6></div>
-                            
-                          </div>
+                <div class="row div-space" style="text-align: right;width: 100%;">
+
+                    <div class="col">
+
+                        <div class="col-sm-10" style="border-top: 0px rgba(1, 9, 117, 0.993) double">
+                            <h6>Total: {{calculateTotal() | currency}} </h6>
                         </div>
+
+                    </div>
+                </div>
+
+
+
+
+
             </div>
 
             <div class="modal-footer" style="margin: 20px">

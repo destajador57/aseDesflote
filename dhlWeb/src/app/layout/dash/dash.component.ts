@@ -62,21 +62,21 @@ export class DashComponent implements OnInit {
   UnidadID: number = 0;
   Unidad: any;
   Usuario: any;
-  comentar : string ="";
-  partida : string ="";
-  ofertar : number = 0;
-  precio : string ="";
-  cantidad : string ="";
+  comentar: string = "";
+  partida: string = "";
+  ofertar: number = 0;
+  precio: string = "";
+  cantidad: string = "";
   unidades: Array<any>;
   comentarios: Array<any>;
   cotizaciones: Array<any>;
   evidencias: Array<any>;
   oferta: any;
   modalReference: any;
-  accionC:string;
-  cotizacionC:string;
-  trasladoC:string;
-  ofertaC:string;
+  accionC: string;
+  cotizacionC: string;
+  trasladoC: string;
+  ofertaC: string;
 
   public temp_var: Object = false;
   temp_comentario = false;
@@ -90,23 +90,23 @@ export class DashComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private _http: HttpClient,
     private cp: CurrencyPipe) {
-      this.Usuario = JSON.parse(localStorage.getItem("user"));
-      this.accionC = this.validateColumn('Accion');
-      this.cotizacionC = this.validateColumn('Cotizacion');
-      this.trasladoC = this.validateColumn('Traslado');
-      this.ofertaC = this.validateColumn('Oferta');
-      console.log(this.Usuario);
-      this.form = fb.group({
-        "txt_idUnidad": this.txt_idUnidad,
-      });
+    this.Usuario = JSON.parse(localStorage.getItem("user"));
+    this.accionC = this.validateColumn('Accion');
+    this.cotizacionC = this.validateColumn('Cotizacion');
+    this.trasladoC = this.validateColumn('Traslado');
+    this.ofertaC = this.validateColumn('Oferta');
+    console.log(this.Usuario);
+    this.form = fb.group({
+      "txt_idUnidad": this.txt_idUnidad,
+    });
 
-      this.formUpdate = fb.group({
-      });
+    this.formUpdate = fb.group({
+    });
 
-      this.unidades = [];
-      this.comentarios = [];
-      this.cotizaciones = [];
-      this.evidencias = [];
+    this.unidades = [];
+    this.comentarios = [];
+    this.cotizaciones = [];
+    this.evidencias = [];
   }
 
   resultadoDash: IAutoTb[] = [];
@@ -124,18 +124,18 @@ export class DashComponent implements OnInit {
     });
   }
 
-  validateColumn(colName:string): string{
+  validateColumn(colName: string): string {
     // Posibles returns r=read | w=write | v=validate | d=deny
     var columnsPermissions = this.Usuario.permisos;
     var columnPermission = columnsPermissions.filter(column => column.columna == colName);
-    if(columnPermission.length > 0){
+    if (columnPermission.length > 0) {
       return columnPermission[0].permiso;
     }
 
     return "d";
   }
 
-  addOferta(oferta){
+  addOferta(oferta) {
     oferta.estatus = null;
     swal({
       title: '¿Desea guardar la oferta?',
@@ -154,7 +154,7 @@ export class DashComponent implements OnInit {
         this.dhlService.AddOferta(oferta).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.oferta = {};
-            if(this.modalReference){
+            if (this.modalReference) {
               this.modalReference.close();
             }
 
@@ -182,7 +182,7 @@ export class DashComponent implements OnInit {
     });
   }
 
-  approveOferta(unidad){
+  approveOferta(unidad) {
     var oferta = {
       idUnidad: unidad.id,
       idUsuario: this.Usuario.idusuario,
@@ -229,7 +229,7 @@ export class DashComponent implements OnInit {
     });
   }
 
-  denyOferta(unidad){
+  denyOferta(unidad) {
     var oferta = {
       idUnidad: unidad.id,
       idUsuario: this.Usuario.idusuario,
@@ -318,7 +318,7 @@ export class DashComponent implements OnInit {
     });
   }
 
-  insertImporteTraslado(unidad, importe){
+  insertImporteTraslado(unidad, importe) {
     swal({
       title: '¿Desea guardar el monto?',
       type: 'warning',
@@ -334,7 +334,7 @@ export class DashComponent implements OnInit {
       if (result.value) {
         this.dhlService.InsertImporte(unidad.id, importe, unidad.responsable, this.Usuario.idusuario).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].ok > 0) {
-            if(this.modalReference){
+            if (this.modalReference) {
               this.modalReference.close(true);
             }
             this.modalReference = null;
@@ -351,7 +351,7 @@ export class DashComponent implements OnInit {
         });
 
       } else if (result.dismiss === 'cancel') {
-        if(unidad.responsable == 'DHL')
+        if (unidad.responsable == 'DHL')
           unidad.responsable = null;
         swal(
           'Cancelado',
@@ -362,7 +362,7 @@ export class DashComponent implements OnInit {
     });
   }
 
-  deleteCotizacion(idpartida,idUnidad){
+  deleteCotizacion(idpartida, idUnidad) {
     swal({
       title: '¿Desea Eliminar la Partida?',
       type: 'warning',
@@ -379,7 +379,7 @@ export class DashComponent implements OnInit {
 
         this.dhlService.deleteCotizacion(idpartida, this.Usuario.idusuario).subscribe((res: any) => {
           console.log(res);
-          if (res && res.OK>0) {
+          if (res && res.OK > 0) {
             //this.cotizaciones=[];
             //Llena Tabla Partidas
             this.dhlService.GetCotizacionByUnidad(idUnidad).subscribe((res: Array<any>) => {
@@ -413,9 +413,9 @@ export class DashComponent implements OnInit {
       }
     });
 
-      }
+  }
 
-  insertCotizacion(idUnidad, partida,cantidad,precio) {
+  insertCotizacion(idUnidad, partida, cantidad, precio) {
     swal({
       title: '¿Desea Ingresar la Partida?',
       type: 'warning',
@@ -430,7 +430,7 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
 
-        this.dhlService.InsertCotizacion(idUnidad, partida,cantidad,precio, this.Usuario.idusuario).subscribe((res: any) => {
+        this.dhlService.InsertCotizacion(idUnidad, partida, cantidad, precio, this.Usuario.idusuario).subscribe((res: any) => {
           if (res && res.length > 0 && res[0].UnidadId > 0) {
             this.cotizaciones = [];
 
@@ -478,13 +478,12 @@ export class DashComponent implements OnInit {
     });
   }
 
-  openImporte(content, unidad){
+  openImporte(content, unidad) {
     this.modalReference = this.modalService.open(content, { size: "lg" });
-    this.modalReference.result.then((result)=>{
-      if(result != true)
-      {
-          unidad.responsable = null;
-          unidad.importeTraslado = null;
+    this.modalReference.result.then((result) => {
+      if (result != true) {
+        unidad.responsable = null;
+        unidad.importeTraslado = null;
       }
     });
     this.Unidad = unidad;
@@ -518,15 +517,103 @@ export class DashComponent implements OnInit {
     });
   }
 
-  calculateTotal():number{
-    let total=0;
-        this.cotizaciones.forEach((cotizacion,idx)=>{
-          total+=cotizacion.precio;
-        });
+  calculateTotal(): number {
+    let total = 0;
+    this.cotizaciones.forEach((cotizacion, idx) => {
+      total += cotizacion.precio;
+    });
     return total;
   }
 
-  displayTraslado(importe){
+  retornaLey(): string {
+    let aprobE = 0;
+    let leyenda = '';
+    this.cotizaciones.forEach((cotizacion, idx) => {
+      aprobE = cotizacion.aprobada;
+    });
+
+    if (aprobE == 0) {
+      leyenda = 'Cotización Pendiente de Aprobar o Anular';
+    }
+
+    if (aprobE == 1) {
+      leyenda = 'Cotización Aprobada';
+    }
+    if (aprobE == 2) {
+      leyenda = 'Cotización Anulada';
+    }
+
+    return leyenda;
+  }
+
+  retornaLeyCot(cotizacionC): string {
+    let aprobE = 0;
+    let leyenda = 'Editar Cotización';
+
+    if (cotizacionC != 'w') {
+      leyenda = 'Ver Cotización';
+    }
+
+    return leyenda;
+  }
+
+  AprobCoti(idUnidad, idAprob) {
+    let pregunta = '';
+    let respuesta = '';
+    if (idAprob == 1) {
+      pregunta = '¿Esta Seguro de Aprobar la Cotización?'
+      respuesta = 'Cotización Aprobada con Éxito.';
+    }
+    else {
+      pregunta = '¿Esta Seguro de Anular la Cotización?'
+      respuesta = 'Cotización Anulada con Éxito.';
+    }
+
+    swal({
+
+      title: pregunta,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+        this.dhlService.aprobarCotizacion(idUnidad, idAprob, this.Usuario.idusuario).subscribe((res: any) => {
+          if (res && res.length > 0 && res[0].OK > 0) {
+
+            this.dhlService.GetUnidades().subscribe((res: Array<any>) => {
+              this.unidades = res;
+              this.temp_var = true;
+            });
+
+            swal(
+              'Guardado',
+              respuesta,
+              'success'
+            );
+
+          } else {
+            this.comentar = "";
+          }
+        });
+
+      } else if (result.dismiss === 'cancel') {
+        swal(
+          'Cancelado',
+          'Proceso Cancelado',
+          'error'
+        )
+      }
+    });
+
+  }
+
+  displayTraslado(importe) {
     return importe != null && importe > 0 ? `(${this.cp.transform(importe)})` : ''
   }
 }
