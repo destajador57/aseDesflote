@@ -67,7 +67,7 @@
                         <td *ngIf="cotizacionC != 'd'">
                             <div style="width:130px;">
                                 <h3>
-                                    <button *ngIf="unidad.TieneCot == 'SI' || cotizacionC == 'w'" title="Ver/editar Cotizacion" [disabled]="unidad.accion != 1 && cotizacionC == 'w'"
+                                    <button *ngIf="unidad.TieneCot == 'SI' || cotizacionC == 'w'" title="Ver/editar Cotizacion" [disabled]="unidad.accion != 1 && cotizacionC == 'w' && unidad.TieneCot != 'SI'"
                                         type="button" title="{{retornaLeyCot(cotizacionC)}}" class="btn btn-info btn-circle"
                                         (click)="openCot(cotizacion,unidad.id);">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>

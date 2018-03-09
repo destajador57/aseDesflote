@@ -320,7 +320,7 @@ export class DashComponent implements OnInit {
 
   insertImporteTraslado(unidad, importe) {
     swal({
-      title: '¿Desea guardar el monto?',
+      title: unidad.responsable == 'DHL' ? '¿Desea guardar el traslado?' : '¿Desea guardar el monto?',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
