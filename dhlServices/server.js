@@ -571,7 +571,66 @@ app.get('/deleteCoti',function(req, res){
 	});
  });
 
+
+ app.get('/AprobCoti',function(req, res){
+	var dbConn = new sql.Connection(config);
+	dbConn.connect().then(function () {
+		var request = new sql.Request(dbConn);
+		request
+		.input ('IdUnidad',req.query.IdUnidad)
+		.input ('IdAprob',req.query.IdAprob)
+		.input ('UsuarioId',req.query.UsuarioId)
+		
+		.execute("WEB_DHL_APROB_COT").then(function (recordSet) {
+			 var msj = JSON.stringify(recordSet[0]);
+			 dbConn.close();
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		  res.send(msj);
+		}).catch(function (err) {
+		   dbConn.close();
+			regreso('0','Err1:'+err.message,res);
+		});
+	}).catch(function (err) {
+		 dbConn.close();
+		 regreso('0','Err2:'+err.message,res);
+	});
+ });
   
+
+ app.get('/InsertaTras',function(req, res){
+	var dbConn = new sql.Connection(config);
+	dbConn.connect().then(function () {
+		var request = new sql.Request(dbConn);
+		request
+		.input ('idUsuario',req.query.UsuarioId)
+		.input ('idUnidad',req.query.UnidadId)
+		 .input('importe',req.query.Importe)
+		 .input('responsable',req.query.Responsable)
+		 
+		.execute("[WEB_DHL_INS_TRASLADO]").then(function (recordSet) {
+			 var msj = JSON.stringify(recordSet[0]);
+			 dbConn.close();
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			 res.contentType('application/json');
+			 res.header("Access-Control-Allow-Origin", "*");
+			 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		  res.send(msj);
+		}).catch(function (err) {
+		   dbConn.close();
+			regreso('0','Err1:'+err.message,res);
+		});
+	}).catch(function (err) {
+		 dbConn.close();
+		 regreso('0','Err2:'+err.message,res);
+	});
+ });
 // escuchar
 app.listen(4850);
 console.log("Servidor Desflote 0.0.2 en el puerto 4850");
