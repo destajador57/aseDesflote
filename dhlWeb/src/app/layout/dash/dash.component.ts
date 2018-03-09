@@ -461,5 +461,54 @@ export class DashComponent implements OnInit {
           total+=cotizacion.precio;
         });
     return total;
-  }    
+  }
+ 
+  AprobCoti(idUnidad, idAprob) {
+    let pregunta = '';
+    let respuesta ='';
+    if(idAprob==1){
+      pregunta='¿Esta Seguro de Aprobar la Cotización?'
+      respuesta = 'Cotización Aprobada con Éxito.';
+    }
+    else{
+      pregunta='¿Esta Seguro de Anular la Cotización?'
+      respuesta = 'Cotización Anulada con Éxito.';
+    }
+
+    swal({
+
+      title: pregunta,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+        this.dhlService.aprobarCotizacion(idUnidad, idAprob, this.Usuario.idusuario).subscribe((res: any) => {
+          if (res && res.length > 0 && res[0].ok > 0) {
+            swal(
+              'Guardado',
+              respuesta,
+              'success'
+            );
+          } else {
+            this.comentar = "";
+          }
+        });
+
+      } else if (result.dismiss === 'cancel') {
+        swal(
+          'Cancelado',
+          'Proceso Cancelado',
+          'error'
+        )
+      }
+    });
+  }
+    
 }

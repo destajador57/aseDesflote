@@ -43,7 +43,7 @@ export class DhlServiceService {
   
 GetCotizacionByUnidad(idUnidad) {
     const url = this.urlService + 'BuscarCoti?idUnidad=' + idUnidad;
-    console.log(url);
+    //console.log(url);
     return this.http.get(url);
   }
 
@@ -66,4 +66,10 @@ GetCotizacionByUnidad(idUnidad) {
     console.log(url);
     return this.http.get(url);
   } 
+
+  aprobarCotizacion(idUnidad,idAprob,UsuarioID) {
+    const url = this.urlService + 'AprobCoti?IdUnidad=' + idUnidad + '&Id=' + idAprob +'&UsuarioId=' + UsuarioID ;
+    console.log(url);
+    return this.http.get(url);
+  }
 }
