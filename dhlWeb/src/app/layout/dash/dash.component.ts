@@ -479,7 +479,6 @@ export class DashComponent implements OnInit {
   }
 
   openImporte(content, unidad){
-    this.Unidad = unidad;
     this.modalReference = this.modalService.open(content, { size: "lg" });
     this.modalReference.result.then((result)=>{
       if(result != true)
@@ -488,6 +487,7 @@ export class DashComponent implements OnInit {
           unidad.importeTraslado = null;
       }
     });
+    this.Unidad = unidad;
   }
 
   openEvidencias(evidencia, idUnidad) {

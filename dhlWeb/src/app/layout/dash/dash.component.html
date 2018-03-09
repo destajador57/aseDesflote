@@ -56,7 +56,7 @@
                         </td>
                         <td *ngIf="accionC != 'd'">
                             <div style="width:160px">
-                                <select title="Accion" class="form-control form-control-sm" [disabled]="accionC == 'r'" >
+                                <select title="Accion" class="form-control form-control-sm" [disabled]="accionC == 'r'" [(ngModel)]="unidad.accion">
                                     <option value="0">Seleccione Accion</option>
                                     <option value="1">Enviar a Taller</option>
                                     <option value="2">Trasladar BANORTE</option>
@@ -66,7 +66,7 @@
                         </td>
                         <td *ngIf="cotizacionC != 'd'">
                             <div style="width:120px;">
-                                <button type="button" title="Editar Cotizacion" class="btn btn-info btn-circle" (click)="openCot(cotizacion,unidad.id);">
+                                <button type="button" title="Editar Cotizacion" [disabled]="unidad.accion != 1 && cotizacionC == 'w'" class="btn btn-info btn-circle" (click)="openCot(cotizacion,unidad.id);">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
 
@@ -82,7 +82,7 @@
                         <td *ngIf="trasladoC != 'd'">
                             <div style="width:100px;">
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r'" id="trasladoDHL{{unidad.id}}" class="form-check-input" type="radio" 
+                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoDHL{{unidad.id}}" class="form-check-input" type="radio" 
                                         (change)="insertImporteTraslado(unidad, 0)" name="traslados{{unidad.id}}"
                                         value="DHL" [(ngModel)]="unidad.responsable" >
                                     <label class="form-check-label" for="trasladoDHL{{unidad.id}}">
@@ -90,7 +90,7 @@
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input [disabled]="trasladoC == 'r'" id="trasladoTP{{unidad.id}}" class="form-check-input" type="radio" 
+                                    <input [disabled]="trasladoC == 'r' || (unidad.accion != 2 && trasladoC == 'w')" id="trasladoTP{{unidad.id}}" class="form-check-input" type="radio" 
                                         (change)="openImporte(contentI, unidad)" name="traslados{{unidad.id}}"
                                         value="TotalParts" [(ngModel)]="unidad.responsable">
                                     <label class="form-check-label" for="trasladoTP{{unidad.id}}">
@@ -106,7 +106,9 @@
                                     <i *ngIf="unidad.estatusOferta == 'Aceptada'" title="Oferta Aceptada" class="fa fa-check text-success" aria-hidden="true"></i>
                                     <i *ngIf="unidad.estatusOferta == 'Rechazada'" title="Oferta Rechazada" class="fa fa-ban text-danger" aria-hidden="true"></i>
                                 </h5>
-                                <button *ngIf="ofertaC == 'w' && (unidad.estatusOferta == null || unidad.estatusOferta == '')" style="margin-left: 10px" type="button" title="Agregar o modificar Oferta" class="btn btn-info btn-circle col-xs-6" (click)="openOfertas(ofertasM, unidad);">
+                                <button *ngIf="ofertaC == 'w' && (unidad.estatusOferta == null || unidad.estatusOferta == '')" style="margin-left: 10px" 
+                                    type="button" title="Agregar o modificar Oferta" class="btn btn-info btn-circle col-xs-6" (click)="openOfertas(ofertasM, unidad);"
+                                    [disabled]="unidad.accion != 3 && ofertaC == 'w'">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
                                 <button *ngIf="ofertaC == 'v' && unidad.monto != null && unidad.monto > 0 && (unidad.estatusOferta == null || unidad.estatusOferta == '')" 
