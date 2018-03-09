@@ -153,7 +153,7 @@ export class DashComponent implements OnInit {
             this.modalReference.close();
             oferta.unidad.monto = res[0].Monto;
             oferta.unidad.estatusOferta = res[0].Estatus;
-
+            oferta.unidad.NombreStatus = "Ofertada"
             swal(
               'Guardado',
               'Oferta Guardada con Exito.',
@@ -200,7 +200,7 @@ export class DashComponent implements OnInit {
             this.oferta = {};
             unidad.monto = res[0].Monto;
             unidad.estatusOferta = res[0].Estatus;
-
+            unidad.NombreStatus = "Comprada"
             swal(
               'Aprobada',
               'Oferta Aprobada con Exito.',
