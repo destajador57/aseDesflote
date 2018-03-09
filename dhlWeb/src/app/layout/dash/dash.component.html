@@ -65,19 +65,29 @@
                             </div>
                         </td>
                         <td *ngIf="cotizacionC != 'd'">
-                            <div style="width:120px;">
-                                <button type="button" title="Editar Cotizacion" class="btn btn-info btn-circle" (click)="openCot(cotizacion,unidad.id);">
+                            <div style="width:130px;">
+                                <h3>
+                                <button *ngIf="unidad.TieneCot == 'SI' || cotizacionC == 'w'" type="button" title="{{retornaLeyCot(cotizacionC)}}" class="btn btn-info btn-circle" (click)="openCot(cotizacion,unidad.id);">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
+                                <button *ngIf="unidad.TieneCot == 'NO' && cotizacionC != 'w'" type="button" title="Sin Cotización" class="btn btn-outline-danger btn-circle" >
+                                <i *ngIf="unidad.TieneCot == 'NO'" title="Sin Cotización" class="fa fa-pencil text-muted" aria-hidden="true"></i>
+                                </button>
 
-                                <button *ngIf="cotizacionC == 'v'" type="button" title="Aprobar Cotizacion" class="btn btn-success btn-circle" (click)="AprobCoti(unidad.id,1);">
+                                <button *ngIf="cotizacionC == 'v' && unidad.Aprobada == 0" type="button" [disabled]="unidad.TieneCot=='NO'" title="Aprobar Cotizacion" class="btn btn-success btn-circle" (click)="AprobCoti(unidad.id,1);">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </button>
 
-                                <button *ngIf="cotizacionC == 'v'" type="button" title="Anular Cotizacion" class="btn btn-danger btn-circle" (click)="AprobCoti(unidad.id,0);">
+                                <button *ngIf="cotizacionC == 'v' && unidad.Aprobada == 0" type="button" [disabled]="unidad.TieneCot=='NO'" title="Anular Cotizacion" class="btn btn-danger btn-circle" (click)="AprobCoti(unidad.id,2);">
                                     <i class="fa fa-ban" aria-hidden="true"></i>
                                 </button>
+                                
+                                <i *ngIf="unidad.Aprobada == 1" title="Cotización Aprobada" class="fa fa-check text-success" aria-hidden="true"></i>
+                                <i *ngIf="unidad.Aprobada == 2" title="Cotización Rechazada" class="fa fa-ban text-danger" aria-hidden="true"></i>
+                                
+                            </h3>
                             </div>
+
                         </td>
                         <td *ngIf="trasladoC != 'd'">
                             <div style="width:100px;">
@@ -274,7 +284,7 @@
         </div>
         <div class="modal-body">
             <!-- <form [formGroup]="form" (ngSubmit)="saveDash()"> -->
-            <div *ngIf="cotizacionC == 'w'" class="row div-space">
+            <div *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'" class="row div-space">
                 <div class="row">
                     <h6 class="text-muted">Agregar Partida</h6>
                     <table style="width: 100%;background-color: white;" border="0">
@@ -293,7 +303,8 @@
                 </div>
             </div>
             <div class="modal-footer" >
-                <button *ngIf="cotizacionC == 'w'" class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
+                    <h6>{{retornaLey()}}</h6>
+                <button *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'" class="btn btn-outline-success" type="submit" (click)="insertCotizacion(UnidadID, partida,cantidad,precio)" title="Agregar Partida">Agregar</button>
             </div>
             <div class="row div-space">
                 <div class="col">
@@ -315,7 +326,7 @@
                                 <td>{{ cotizacion.partida }}</td>
                                 <td>{{ cotizacion.cantidad | number }}</td>
                                 <td>{{ cotizacion.precio | currency }}</td>
-                                <td> <button class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion(cotizacion.idCotizacion,cotizacion.idUnidad)" title="Eliminar Partida">X</button> </td>
+                                <td> <button *ngIf="cotizacionC == 'w' && retornaLey() =='Cotización Pendiente de Aprobar o Anular'" class="btn btn-circle btn-danger" style="color: white;" type="submit" (click)="deleteCotizacion(cotizacion.idCotizacion,cotizacion.idUnidad)" title="Eliminar Partida">X</button> </td>
                             </tr>
                         </tbody>
                         
@@ -329,6 +340,11 @@
                             
                           </div>
                         </div>
+
+                        
+
+                        
+
             </div>
 
             <div class="modal-footer" style="margin: 20px">

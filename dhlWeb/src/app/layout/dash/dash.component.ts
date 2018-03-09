@@ -463,6 +463,38 @@ export class DashComponent implements OnInit {
         });
     return total;
   }
+
+  retornaLey():string{
+    let aprobE=0;
+    let leyenda ='';
+        this.cotizaciones.forEach((cotizacion,idx)=>{
+          aprobE=cotizacion.aprobada;
+        });
+
+        if(aprobE==0){
+          leyenda='Cotización Pendiente de Aprobar o Anular';
+        }
+
+        if(aprobE==1){
+          leyenda='Cotización Aprobada';
+        }
+        if(aprobE==2){
+          leyenda='Cotización Anulada';
+        }
+
+    return leyenda;
+  }
+
+  retornaLeyCot(cotizacionC):string{
+    let aprobE=0;
+    let leyenda ='Editar Cotización';
+
+        if(cotizacionC!='w'){
+          leyenda='Ver Cotización';
+        }
+
+    return leyenda;
+  }
  
   AprobCoti(idUnidad, idAprob) {
     let pregunta = '';
@@ -491,12 +523,19 @@ export class DashComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.dhlService.aprobarCotizacion(idUnidad, idAprob, this.Usuario.idusuario).subscribe((res: any) => {
-          if (res && res.length > 0 && res[0].ok > 0) {
+          if (res && res.length > 0 && res[0].OK > 0) {
+
+            this.dhlService.GetUnidades().subscribe((res: Array<any>) => {
+              this.unidades = res;
+              this.temp_var = true;
+            });
+
             swal(
               'Guardado',
               respuesta,
               'success'
             );
+            
           } else {
             this.comentar = "";
           }
@@ -510,6 +549,7 @@ export class DashComponent implements OnInit {
         )
       }
     });
+  
   }
     
 }

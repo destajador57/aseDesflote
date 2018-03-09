@@ -7,7 +7,8 @@ export class DhlServiceService {
   urlService: string;
   constructor(private http: HttpClient) {
    // this.urlService = 'http://192.168.0.167:4850/';
-  this.urlService = 'http://189.204.141.193:4850/';
+  //this.urlService = 'http://189.204.141.193:4850/';
+  this.urlService = 'http://192.168.20.71:4850/';
   }
 
   login(user) {
@@ -68,8 +69,8 @@ GetCotizacionByUnidad(idUnidad) {
   } 
 
   aprobarCotizacion(idUnidad,idAprob,UsuarioID) {
-    const url = this.urlService + 'AprobCoti?IdUnidad=' + idUnidad + '&Id=' + idAprob +'&UsuarioId=' + UsuarioID ;
-    console.log(url);
+    const url = this.urlService + 'AprobCoti?IdUnidad=' + idUnidad + '&IdAprob=' + idAprob +'&UsuarioId=' + UsuarioID ;
+    //console.log(url);
     return this.http.get(url);
   }
 }
