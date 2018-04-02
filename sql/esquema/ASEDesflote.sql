@@ -4,7 +4,7 @@
 -- Desarrollador: Miguel Angel Reyes Xinaxtle
 -- Objetivo: Base de datos para administrar el desflote de grupo andrade
 -- aplicaciones: Asedesflote web y Asedesflote movil
-
+ 
 CREATE DATABASE ASEDesflote
 
 -- Nombre: ASEDesflote
